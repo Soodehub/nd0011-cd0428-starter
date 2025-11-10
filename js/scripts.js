@@ -221,3 +221,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// Contact form validation and character counter
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("formSection");
+  const emailInput = document.getElementById("contactEmail");
+  const messageInput = document.getElementById("contactMessage");
+  const emailError = document.getElementById("emailError");
+  const messageError = document.getElementById("messageError");
+  const charCount = document.getElementById("charactersLeft");
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const invalidChars = /[^a-zA-Z0-9@._-]/;
+
+  // live character count
+  messageInput.addEventListener("input", () => {
+    const length = messageInput.value.length;
+    charCount.textContent = `Characters: ${length}/300`;
+    charCount.style.color = length > 300 ? "red" : "";
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    let valid = true;
+    emailError.textContent = "";
+    messageError.textContent = "";
+
+    if (!emailPattern.test(emailInput.value)) {
+      emailError.textContent = "Invalid email address.";
+      valid = false;
+    } else if (invalidChars.test(emailInput.value)) {
+      emailError.textContent = "Email contains invalid characters.";
+      valid = false;
+    }
+
+    if (messageInput.value.trim().length === 0) {
+      messageError.textContent = "Message cannot be empty.";
+      valid = false;
+    } else if (messageInput.value.length > 300) {
+      messageError.textContent = "Message is too long (max 300 characters).";
+      valid = false;
+    }
+
+    if (valid) {
+      alert("Your message has been sent!");
+      form.reset();
+      charCount.textContent = "Characters: 0/300";
+    }
+  });
+});
